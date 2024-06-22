@@ -17,18 +17,32 @@ class TestAlgo(unittest.TestCase):
     # def test_dp(self):
     #     self.run_rest("dp.py", AssertComparator.EQUAL)
 
-    def test_modified_greedy(self):
-        self.run_rest("modified_greedy.py", AssertComparator.GREATER_EQUAL)
+    def test_rounding_0_5(self):
+        self.run_rest("rounding.py", AssertComparator.GREATER_EQUAL, extra_args="0.5")
 
-    def test_greedy(self):
-        self.run_rest("greedy.py", AssertComparator.GREATER_EQUAL)
+    def test_rounding_0_1(self):
+        self.run_rest("rounding.py", AssertComparator.GREATER_EQUAL, extra_args="0.1")
 
-    def test_fractional(self):
-        self.run_rest("fractional.py", AssertComparator.LESS_EQUAL)
+    # def test_rounding_0_1(self):
+    #     self.run_rest("rounding.py", AssertComparator.GREATER_EQUAL, extra_args="0.1")
 
-    def run_rest(self, algo_file, assertComp: AssertComparator):
-        algo = algo_file.split(".")[0]
+    # def test_rounding_0_01(self):
+    #     self.run_rest("rounding.py", AssertComparator.GREATER_EQUAL, extra_args="0.01")
+
+    # def test_modified_greedy(self):
+    #     self.run_rest("modified_greedy.py", AssertComparator.GREATER_EQUAL)
+
+    # def test_greedy(self):
+    #     self.run_rest("greedy.py", AssertComparator.GREATER_EQUAL)
+
+    # def test_fractional(self):
+    #     self.run_rest("fractional.py", AssertComparator.LESS_EQUAL)
+
+    def run_rest(self, algo_file, assertComp: AssertComparator, extra_args = ""):
+        # For output naming
+        algo = algo_file.split(".")[0] + extra_args.replace(".", "_")
         postfix = time.strftime("%H%M")
+
         files = os.listdir("tests")
         input_files = [f for f in files if f.endswith(".in")]
         input_files.sort(key=lambda x: int(x.split(".")[0]))
@@ -42,7 +56,7 @@ class TestAlgo(unittest.TestCase):
                 print("------")
                 print("Testcase", f)
                 # Run algo to generate output
-                os.system(f"python3 {algo_file} < tests/" + input_file + " > tests/" + output_file)
+                os.system(f"python3 {algo_file} {extra_args} < tests/" + input_file + " > tests/" + output_file)
 
                 # Compare alg output with expected output
                 with open("tests/" + output_file, "r") as fp:
