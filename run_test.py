@@ -9,13 +9,19 @@ from enum import Enum
 class AssertComparator(Enum):
     EQUAL=1 # Expected == Acutal
     GREATER_EQUAL=2 # Expected >= Actural
-    LESS_EQUAL=3 # Expected < Actual
+    LESS_EQUAL=3 # Expected <= Actual
 
 class TestAlgo(unittest.TestCase):
 
 
     # def test_dp(self):
     #     self.run_rest("dp.py", AssertComparator.EQUAL)
+
+    def test_modified_greedy(self):
+        self.run_rest("modified_greedy.py", AssertComparator.GREATER_EQUAL)
+
+    def test_greedy(self):
+        self.run_rest("greedy.py", AssertComparator.GREATER_EQUAL)
 
     def test_fractional(self):
         self.run_rest("fractional.py", AssertComparator.LESS_EQUAL)

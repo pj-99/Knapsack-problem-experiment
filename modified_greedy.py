@@ -4,20 +4,27 @@ from time import time
 from utils import read_input
 
 def greedy_solve(n, budget, w, v):
-    # Sort item by v_i/w_i, descending
+
+    # Find the item_i has the highest value within budget
+    max_value_item = 0 # within budget
+    for i in range(n):
+        if w[i] <= budget:
+            max_value_item = max(max_value_item, v[i])
+
+    # Calculate greedy
     items = [( i, v[i] * 1.0 / w[i]) for i in range(n)]
     items.sort(key= lambda item : item[1], reverse=True)
 
-    value = 0
+    greedy_value = 0
     for item in items:
         idx, _ = item
         if budget <= w[idx]:
             break
 
-        value += v[idx]
+        greedy_value += v[idx]
         budget -= w[idx]
 
-    return value
+    return max(max_value_item, greedy_value)
 
 if __name__ == "__main__":
 

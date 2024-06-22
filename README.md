@@ -14,6 +14,7 @@
 - 選擇該隨機分佈的理由？
 
 ## Compared algos
-1. Original DP `dp.py` : as ground truth for validating
-2. Fractional knapsack: upper bound (fast😄)
-3. Modified Greedy
+1. Original DP  `dp.py` : as ground truth for validating
+2. Fractional knapsack `fractional.py`  : upper bound (fast😄)
+3. Greedy `greedy`
+4. Modified `modified_greedy` : Consider the pickable max-value item

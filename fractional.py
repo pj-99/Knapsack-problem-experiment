@@ -1,10 +1,7 @@
 # Fracional
-import sys
 from time import time
 
 from utils import read_input
-
-sys.setrecursionlimit(1000000)
 
 def fractional_solve(n, budget, w, v):
     # Sort item by v_i/w_i, descending
