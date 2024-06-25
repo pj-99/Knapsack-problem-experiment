@@ -1,4 +1,4 @@
-# Knapsack probelem expirments
+# Knapsack probelem experiments
 
 - NCCU advanced algorithm course
 
