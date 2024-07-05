@@ -1,5 +1,3 @@
-# Original dynamic programming algo
-from functools import lru_cache
 from time import time
 from utils import read_input
 import argparse
@@ -46,6 +44,7 @@ def rounding(epsilon, lowerbound, n, v, w):
         new_v_i = ceil(v[i]/x)
         if new_v_i > 0:
             new_v.append(new_v_i)
+            # print(f"old vi: {v[i]} / new vi: {new_v_i}")s
             new_w.append(w[i])
 
     return new_v, new_w
