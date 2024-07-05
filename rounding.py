@@ -1,7 +1,7 @@
 from time import time
 from utils import read_input
 import argparse
-from math import ceil, inf
+from math import ceil, inf, floor
 
 # TODO: Check if other algo need to use loop instead of recursion like this one
 def dp_exactly_val_solve(n, budget, w, vals):
@@ -30,12 +30,13 @@ def dp_exactly_val_solve(n, budget, w, vals):
 
     return max_val
 
-def rounding(epsilon, lowerbound, n, v, w):
-    # Do rounding
-    x = (epsilon * lowerbound) / n
+def calc_rounding_amount(epsilon, lowerbound, n):
+    return (1.0 * epsilon * lowerbound) / n
+
+def rounding(x, n, v, w):
     # Note! Make sure x is greater than 1
     if(x <= 1):
-        return v, w
+        raise ValueError("x must be greater than 1")
 
     # If value[i] after rounding = 0, remove it
     new_v = []
@@ -63,8 +64,11 @@ if __name__ == "__main__":
     # Rounding vals
     if epsilon > 0:
         lowerbound = max(v)
-        v, w = rounding(epsilon, lowerbound, n, v, w)
+        x = calc_rounding_amount(epsilon, lowerbound, n)
+        v, w = rounding(x, n, v, w)
 
-    print(dp_exactly_val_solve(n, budget, w, v))
-
+        rounded_result = dp_exactly_val_solve(n, budget, w, v)
+        print(floor(rounded_result * x)) # Restore real values
+    else:
+        print(dp_exactly_val_solve(n, budget, w, v))
     print(time() - start_time)

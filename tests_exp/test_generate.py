@@ -39,7 +39,7 @@ def generate_testcase(output_file):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--n", help="how many test case files should be generated", default=5)
+    parser.add_argument("--n", help="how many test case files should be generated", default=2)
     args = parser.parse_args()
 
     for i in range(1, args.n+1):

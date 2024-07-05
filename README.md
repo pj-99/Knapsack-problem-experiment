@@ -51,13 +51,15 @@ python run_exp.py
 
 3. Show the result comparision
 ```sh
-python show_result.py
+python show_exp_result.py
 ```
 
-### Verfiy correctness
+#### Verfiy correctness
+
 ```sh
 python run_verify.py
 ```
+This will compare all algo's acutal output with expected output
 
 
 ## Note
@@ -65,10 +67,15 @@ python run_verify.py
 2. 跑測試，扣掉 IO 時間，將資料彙整於 CSV
 3. 畫圖
 
-
+# Remove test run results file
+```sh
+# Remove file in tests_exp whose file name is ending with 2358
+./remove_test_files.sh ./tests_exp 2358
+```
 
 ## Compared algos
-1. Original DP  `dp.py` : as ground truth for validating
-2. Fractional knapsack `fractional.py`  : upper bound (fast😄)
-3. Greedy `greedy`
-4. Modified `modified_greedy` : Consider the pickable max-value item
+1. Original DP  `dp.py` : as ground truth for validating result
+2. Fractional knapsack `fractional.py`  : as upper bound (fast😄)
+3. Greedy `greedy`: as the fast approach
+4. Modified `modified_greedy` : as the fast approach and better than greedy
+   - it is greedy, but consider the pickable max-value item

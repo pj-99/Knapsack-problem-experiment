@@ -6,26 +6,21 @@ import os
 import unittest
 import time
 from enum import Enum
+import numpy as np
 
 
 TEST_FOLDER = "tests_exp"
 
-class AssertComparator(Enum):
-    EQUAL=1 # Expected == Acutal
-    GREATER_EQUAL=2 # Expected >= Actural
-    LESS_EQUAL=3 # Expected <= Actual
-
 class TestAlgo(unittest.TestCase):
 
-
     # def test_dp(self):
-    #     self.run_rest("dp.py", AssertComparator.EQUAL)
+    #     self.run_rest("dp.py")
 
-    def test_rounding_0_5(self):
-        self.run_rest("rounding.py", extra_args="0.5")
 
-    def test_rounding_0_1(self):
-        self.run_rest("rounding.py", extra_args="0.1")
+    def test_rounding(self):
+        for epsilon in np.arange(0, 0.1, 0.01):
+            with self.subTest(epsilon=epsilon):
+                self.run_rest("rounding.py", extra_args=f"{epsilon}")
 
     # def test_rounding_0_1(self):
     #     self.run_rest("rounding.py", AssertComparator.GREATER_EQUAL, extra_args="0.1")
@@ -33,18 +28,18 @@ class TestAlgo(unittest.TestCase):
     # def test_rounding_0_01(self):
     #     self.run_rest("rounding.py", AssertComparator.GREATER_EQUAL, extra_args="0.01")
 
-    # def test_modified_greedy(self):
-    #     self.run_rest("modified_greedy.py", AssertComparator.GREATER_EQUAL)
+    def test_modified_greedy(self):
+        self.run_rest("modified_greedy.py")
 
-    # def test_greedy(self):
-    #     self.run_rest("greedy.py", AssertComparator.GREATER_EQUAL)
+    def test_greedy(self):
+        self.run_rest("greedy.py")
 
-    # def test_fractional(self):
-    #     self.run_rest("fractional.py", AssertComparator.LESS_EQUAL)
+    def test_fractional(self):
+        self.run_rest("fractional.py")
 
     def run_rest(self, algo_file, extra_args = ""):
         # For output naming
-        algo = algo_file.split(".")[0] + extra_args.replace(".", "_")
+        algo = algo_file.split(".")[0] + extra_args
         postfix = time.strftime("%H%M")
 
         files = os.listdir(TEST_FOLDER)
