@@ -16,13 +16,17 @@ Example:
 '''
 import random
 import argparse
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 def generate_testcase(output_file):
     budget =  1e6
+
     n = 100
 
-    mu = 1.5e5  # 150000
-    sigma = 2.5e4  # 25000
+    mu = budget / 10
+    sigma = mu / 3
 
     w = [random.normalvariate(mu, sigma) for _ in range(n)]
     v = [random.normalvariate(mu, sigma) for _ in range(n)]
@@ -36,11 +40,31 @@ def generate_testcase(output_file):
         f.write(" ".join(map(str, w))+ "\n")
         f.write(" ".join(map(str, v)) + "\n")
 
+    # Show distribution of w and v
+    plt.figure(figsize=(12, 6))
+
+    plt.subplot(1, 2, 1)
+    plt.hist(w, bins=20, edgecolor='black')
+    plt.title('Distribution of Weights (w)')
+    plt.xlabel('Weight')
+    plt.ylabel('Frequency')
+
+    plt.subplot(1, 2, 2)
+    plt.hist(v, bins=20, edgecolor='black')
+    plt.title('Distribution of Values (v)')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
+
+    plt.tight_layout()
+    plt.savefig(output_file.replace('.in', '_distribution.png'))
+    plt.close()
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--n", help="how many test case files should be generated", default=2)
+    parser.add_argument("--n", help="how many test case files should be generated", default=3, type=int)
     args = parser.parse_args()
 
     for i in range(1, args.n+1):
-        generate_testcase(f"{i}.in")
+        generate_testcase(f"{i}_norm.in")

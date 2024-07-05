@@ -1,5 +1,3 @@
-import time
-
 def read_input():
     n, budget = input().split()
     w = list(map(int,input().split()))

@@ -1,37 +1,53 @@
 from time import time
 from utils import read_input
 import argparse
-from math import ceil, inf, floor
+from math import ceil, inf
+import modifiedgreedy
+from tqdm import tqdm
 
-# TODO: Check if other algo need to use loop instead of recursion like this one
-def dp_exactly_val_solve(n, budget, w, vals):
+def dp_exactly_val_solve(n, budget, w, vals, old_vals):
     total_v = sum(vals)
+    # print(f"Total value: {total_v}")
 
-    # Init dp[i][v]
-    dp = [[inf] * (total_v + 1) for _ in range(n)]
-    dp[0][0] = 0
-    dp[0][vals[0]] = w[0]
+    # Originall, init dp[i][v] = [min budget, resotred result value(before rounding)]
+    # But for saving space, we can store only the current row
+    # dp[v] = [min budget, resotred result value(before rounding)]
+    dp = [(inf, 0)] * (total_v + 1)
+    dp[0] = (0, 0)
+    dp[vals[0]] = (w[0], old_vals[0])
 
-    for i in (range(1, n)):
-        for v in range(1, total_v+1):
-            dp[i][v] = dp[i-1][v] # don't pick current
+    for i in tqdm(range(1, n)):
+        prev_dp = dp[:]
+        for v in tqdm(range(1, total_v+1)):
+            skip_budget, skip_old_val = prev_dp[v]
 
-            if v >= vals[i]: # Otherwise < 0
-                dp[i][v] = min(
-                    dp[i][v],
-                    dp[i-1][v-vals[i]] + w[i] # pick current
-                )
+            # dp[i][v] = (
+            #     min(skip_budget, pick_budget),
+            #     skip_old_val if skip_budget < pick_budget else pick_old_val
+            # )
 
-    max_val = 0
+            if v >= vals[i]:
+                prev_budget, prev_old_val = prev_dp[v-vals[i]]
+                pick_budget = prev_budget + w[i]
+                pick_old_val = prev_old_val + old_vals[i]
+                if pick_budget < skip_budget:
+                    dp[v] = (pick_budget, pick_old_val)
+                else:
+                    dp[v] = (skip_budget, skip_old_val)
+            else:
+                dp[v] = (skip_budget, skip_old_val)
+
+
+    max_old_val = 0
     for v in range(total_v, -1, -1): # Start from the larger v
-        if dp[n-1][v] <= budget:
-            max_val = v
+        if dp[v][0] <= budget:
+            _, max_old_val = dp[v]
             break
 
-    return max_val
+    return max_old_val
 
 def calc_rounding_amount(epsilon, lowerbound, n):
-    return (1.0 * epsilon * lowerbound) / n
+    return (epsilon * lowerbound) / n
 
 def rounding(x, n, v, w):
     # Note! Make sure x is greater than 1
@@ -40,15 +56,11 @@ def rounding(x, n, v, w):
 
     # If value[i] after rounding = 0, remove it
     new_v = []
-    new_w = []
     for i in range(n):
-        new_v_i = ceil(v[i]/x)
-        if new_v_i > 0:
-            new_v.append(new_v_i)
-            # print(f"old vi: {v[i]} / new vi: {new_v_i}")s
-            new_w.append(w[i])
+        new_v_i = ceil(v[i]/(x*1.0))
+        new_v.append(new_v_i)
 
-    return new_v, new_w
+    return new_v, w
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -63,12 +75,17 @@ if __name__ == "__main__":
 
     # Rounding vals
     if epsilon > 0:
-        lowerbound = max(v)
-        x = calc_rounding_amount(epsilon, lowerbound, n)
-        v, w = rounding(x, n, v, w)
+        lowerbound = modifiedgreedy.greedy_solve(n, budget, w, v)
 
-        rounded_result = dp_exactly_val_solve(n, budget, w, v)
-        print(floor(rounded_result * x)) # Restore real values
+        x = calc_rounding_amount(epsilon, lowerbound, n)
+        old_v = v
+        if x >= 1:
+            v, w = rounding(x, n, v, w)
+
+        # print(f"Epsilon {epsilon}, Rounding amount x: {x}")
+        real_val_sum = dp_exactly_val_solve(n, budget, w, v, old_v)
+        print(real_val_sum)
     else:
-        print(dp_exactly_val_solve(n, budget, w, v))
+        real_val_sum = dp_exactly_val_solve(n, budget, w, v, v)
+        print(real_val_sum)
     print(time() - start_time)
