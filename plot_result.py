@@ -1,9 +1,5 @@
-from itertools import cycle
-import itertools
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-import glob
 
 def plot_by_epsilon(ax, dfs, y_axis, y_unit, compare_algos=[], simplified_legend=False,
                     fix_rounding_linestyle=False,
